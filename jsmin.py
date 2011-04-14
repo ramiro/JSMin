@@ -27,7 +27,6 @@ SOFTWARE.
 
 import sys
 
-#EOF = chr(26)
 EOF = ''
 
 theLookahead = EOF
@@ -159,8 +158,6 @@ def jsmin():
     replaced with spaces. Carriage returns will be replaced with linefeeds.
     Most spaces and linefeeds will be removed.
     """
-    #global theA
-    #global theB
     action(3)
     while (theA != EOF):
         if theA == ' ':

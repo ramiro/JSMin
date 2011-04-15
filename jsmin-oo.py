@@ -60,11 +60,9 @@ class JSMin(object):
         self.theLookahead = EOF
         if (c == EOF):
             c = self.input.read(1)
-        if c != EOF:
-            ordc = ord(c)
-        if c in ('\n', EOF) or ordc >= 0x20:
+        if c >= ' ' or c in ('\n', EOF):
             return c
-        if ordc == '\r':
+        if c == '\r':
             return '\n'
         return ' '
 
@@ -84,10 +82,9 @@ class JSMin(object):
         if c == '/':
             x = self.peek()
             if x == '/':
-                while True:
+                while c > '\n':
                     c = self.get()
-                    if c <= '\n':
-                        return c
+                return c
             if x in ('/', '*'):
                 self.get()
                 while True:
@@ -119,7 +116,7 @@ class JSMin(object):
                     self.theA = self.get()
                     if self.theA == self.theB:
                         break
-                    if self.theA == '\\':
+                    elif self.theA == '\\':
                         self.output.write(self.theA)
                         self.theA = self.get()
                     if self.theA == EOF:
@@ -137,7 +134,7 @@ class JSMin(object):
                             self.theA = self.get()
                             if self.theA == ']':
                                 break
-                            if self.theA == '\\':
+                            elif self.theA == '\\':
                                 self.output.write(self.theA)
                                 self.theA = self.get()
                             if self.theA == EOF:
@@ -166,7 +163,7 @@ class JSMin(object):
         self.output = output
 
         self.action(3)
-        while (self.theA != EOF):
+        while self.theA != EOF:
             if self.theA == ' ':
                 if isAlphanum(self.theB):
                     self.action(1)

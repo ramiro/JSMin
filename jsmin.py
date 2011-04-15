@@ -57,11 +57,9 @@ def get():
     theLookahead = EOF
     if (c == EOF):
         c = sys.stdin.read(1)
-    if c != EOF:
-        ordc = ord(c)
-    if c in ('\n', EOF) or ordc >= 0x20:
+    if c >= ' ' or c in ('\n', EOF):
         return c
-    if ordc == '\r':
+    if c == '\r':
         return '\n'
     return ' '
 
@@ -82,10 +80,9 @@ def next():
     if c == '/':
         x = peek()
         if x == '/':
-            while True:
+            while c > '\n':
                 c = get()
-                if c <= '\n':
-                    return c
+            return c
         if x in ('/', '*'):
             get()
             while True:
@@ -119,7 +116,7 @@ def action(d):
                 theA = get()
                 if theA == theB:
                     break
-                if theA == '\\':
+                elif theA == '\\':
                     sys.stdout.write(theA)
                     theA = get()
                 if theA == EOF:
@@ -137,7 +134,7 @@ def action(d):
                         theA = get()
                         if theA == ']':
                             break
-                        if theA == '\\':
+                        elif theA == '\\':
                             sys.stdout.write(theA)
                             theA = get()
                         if theA == EOF:
@@ -159,7 +156,7 @@ def jsmin():
     Most spaces and linefeeds will be removed.
     """
     action(3)
-    while (theA != EOF):
+    while theA != EOF:
         if theA == ' ':
             if isAlphanum(theB):
                 action(1)
